@@ -6,15 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import overridetech.jdbc.jpa.model.User;
 import overridetech.jdbc.jpa.util.Util;
-import overridetech.jdbc.jpa.dao.*;
-import overridetech.jdbc.jpa.service.*;
+
 
 @Configuration
 @ComponentScan(basePackages = "overridetech.jdbc.jpa")
-@PropertySource("classpath:my.properties")
+//@PropertySource("classpath:application.properties")
 public class MyConfiguration {
     @Bean
     public ServiceRegistry getServiceRegistryInstance(){
@@ -23,23 +20,11 @@ public class MyConfiguration {
 
     @Bean
     public MetadataSources getMetadataSourcesInstance(@Autowired ServiceRegistry serviceRegistry){
-        System.out.println(serviceRegistry);
         return Util.getMetadataSourcesInstance(serviceRegistry);
     }
 
     @Bean
     public SessionFactory sessionFactory(@Autowired MetadataSources metadataSources){
-        metadataSources.addAnnotatedClass(User.class);
         return Util.getSessionFactoryInstance(metadataSources.buildMetadata());
-    }
-
-    @Bean
-    public UserDao getUserDaoHibernateImpl(){
-        return new UserDaoHibernateImpl();
-    }
-
-    @Bean
-    public UserService getUserService(){
-        return new UserServiceImpl();
     }
 }
